@@ -15,12 +15,12 @@ const RevealCard: React.FC<RevealCardProps> = ({ player, word, hint, onConfirm, 
   const [hasViewed, setHasViewed] = useState(false);
 
   // Handlers for both Touch and Mouse to ensure cross-device support
-  const handleStart = (e: React.SyntheticEvent) => {
+  const handleStart = () => {
     setIsRevealed(true);
     setHasViewed(true);
   };
 
-  const handleEnd = (e: React.SyntheticEvent) => {
+  const handleEnd = () => {
     setIsRevealed(false);
   };
 

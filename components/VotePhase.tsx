@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Player } from '../types';
-import { Timer, AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface VotePhaseProps {
   players: Player[];
@@ -16,7 +16,8 @@ const VotePhase: React.FC<VotePhaseProps> = ({ players, word, onRestart }) => {
   const imposter = players.find(p => p.isImposter);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    // Explicitly using 'any' or 'number' to avoid NodeJS vs Browser type conflicts in build
+    let interval: any;
     if (isTimerRunning && timeLeft > 0 && !showResult) {
       interval = setInterval(() => {
         setTimeLeft((prev) => prev - 1);

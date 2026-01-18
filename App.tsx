@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Player, GameStage, GameState } from './types';
 import { CATEGORIZED_WORDS } from './constants';
-import { generateWord } from './services/geminiService';
 import PlayerSetup from './components/PlayerSetup';
 import RevealCard from './components/RevealCard';
 import VotePhase from './components/VotePhase';
@@ -17,8 +16,6 @@ function App() {
     timeRemaining: 300,
   });
   
-  const [isGenerating, setIsGenerating] = useState(false);
-
   const addPlayer = (name: string) => {
     const newPlayer: Player = {
       id: Date.now().toString() + Math.random().toString(),
@@ -39,34 +36,18 @@ function App() {
     }));
   };
 
-  const startGame = async (useAI: boolean) => {
+  const startGame = () => {
     if (game.players.length < 3) return;
 
-    let selectedWord = '';
-    let selectedHint = '';
-    setIsGenerating(true);
+    // Select random word from local list
+    const randomCategoryIndex = Math.floor(Math.random() * CATEGORIZED_WORDS.length);
+    const categoryGroup = CATEGORIZED_WORDS[randomCategoryIndex];
+    const randomWordIndex = Math.floor(Math.random() * categoryGroup.words.length);
+    
+    const selectedWord = categoryGroup.words[randomWordIndex];
+    const selectedHint = categoryGroup.category;
 
-    if (useAI) {
-      const aiResult = await generateWord();
-      if (aiResult.word) {
-        selectedWord = aiResult.word;
-        selectedHint = aiResult.hint;
-      }
-    }
-
-    // Fallback to local list if AI wasn't used or failed
-    if (!selectedWord) {
-      const randomCategoryIndex = Math.floor(Math.random() * CATEGORIZED_WORDS.length);
-      const categoryGroup = CATEGORIZED_WORDS[randomCategoryIndex];
-      const randomWordIndex = Math.floor(Math.random() * categoryGroup.words.length);
-      
-      selectedWord = categoryGroup.words[randomWordIndex];
-      selectedHint = categoryGroup.category;
-    }
-
-    setIsGenerating(false);
-
-    // Reset roles
+    // Assign roles
     const playerCount = game.players.length;
     const imposterIndex = Math.floor(Math.random() * playerCount);
     
@@ -113,7 +94,6 @@ function App() {
           onAddPlayer={addPlayer}
           onRemovePlayer={removePlayer}
           onStartGame={startGame}
-          isGenerating={isGenerating}
         />
       )}
 

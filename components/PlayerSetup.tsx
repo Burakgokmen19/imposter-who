@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 import { Player } from '../types';
-import { Trash2, Plus, User, Play, Sparkles } from 'lucide-react';
+import { Trash2, Plus, User, Play } from 'lucide-react';
 
 interface PlayerSetupProps {
   players: Player[];
   onAddPlayer: (name: string) => void;
   onRemovePlayer: (id: string) => void;
-  onStartGame: (useAI: boolean) => void;
-  isGenerating: boolean;
+  onStartGame: () => void;
 }
 
 const PlayerSetup: React.FC<PlayerSetupProps> = ({ 
   players, 
   onAddPlayer, 
   onRemovePlayer, 
-  onStartGame,
-  isGenerating
+  onStartGame
 }) => {
   const [newName, setNewName] = useState('');
 
@@ -89,35 +87,16 @@ const PlayerSetup: React.FC<PlayerSetupProps> = ({
       {/* Action Buttons */}
       <div className="space-y-3 mt-auto pt-4">
         <button
-          onClick={() => onStartGame(false)}
-          disabled={!isReady || isGenerating}
+          onClick={onStartGame}
+          disabled={!isReady}
           className={`w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-bold text-lg transition-all transform active:scale-95 shadow-lg ${
-            isReady && !isGenerating
+            isReady
               ? 'bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white shadow-indigo-500/25'
               : 'bg-slate-800 text-slate-500 cursor-not-allowed'
           }`}
         >
           <Play className="w-5 h-5 fill-current" />
           OYUNU BAŞLAT
-        </button>
-
-        <button
-          onClick={() => onStartGame(true)}
-          disabled={!isReady || isGenerating}
-          className={`w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-bold text-lg transition-all transform active:scale-95 shadow-lg border-2 ${
-            isReady
-              ? 'border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20'
-              : 'border-slate-800 bg-transparent text-slate-600 cursor-not-allowed'
-          }`}
-        >
-          {isGenerating ? (
-            <span className="animate-pulse">AI Kelime Üretiyor...</span>
-          ) : (
-            <>
-              <Sparkles className="w-5 h-5" />
-              AI İLE BAŞLAT
-            </>
-          )}
         </button>
         
         {!isReady && (
